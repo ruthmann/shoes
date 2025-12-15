@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ruthmann Shoe Collection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+</head>
+<body class="bg-zinc-50 text-zinc-900">
+  <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-zinc-200">
+    <div class="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
+      <div class="flex-1">
+        <h1 class="text-lg sm:text-xl font-semibold">Ruthmann Shoe Collection</h1>
+        <p class="text-xs sm:text-sm text-zinc-500">Search, compare, and share your catalog</p>
+      </div>
+      <a class="text-sm text-zinc-600 hover:text-zinc-900 underline" href="https://github.com/" target="_blank" rel="noreferrer">Deploy</a>
+    </div>
+    <div class="mx-auto max-w-6xl px-4 pb-3 grid grid-cols-1 sm:grid-cols-4 gap-2">
+      <input id="q" class="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
+             placeholder="Search: brand, model, last, leather, notes…" />
+      <select id="collection" class="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm">
+        <option value="all">All (Active + Retired)</option>
+        <option value="active">Active</option>
+        <option value="retired">Retired / To Sell</option>
+      </select>
+      <select id="brand" class="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm">
+        <option value="all">All brands</option>
+      </select>
+      <select id="type" class="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm">
+        <option value="all">All types</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-5">
+    <div class="flex items-center justify-between gap-3 mb-3">
+      <div class="text-sm text-zinc-600"><span id="count">0</span> items</div>
+      <button id="clear" class="text-sm rounded-xl border border-zinc-300 bg-white px-3 py-2 hover:bg-zinc-100">Clear</button>
+    </div>
+    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+  </main>
+
+  <!-- Detail modal -->
+  <div id="modal" class="hidden fixed inset-0 z-30">
+    <div class="absolute inset-0 bg-black/40" data-close="1"></div>
+    <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center p-2 sm:p-6">
+      <div class="w-full sm:max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="p-4 border-b border-zinc-200 flex items-start justify-between gap-3">
+          <div>
+            <div id="mTitle" class="text-lg font-semibold"></div>
+            <div id="mSub" class="text-sm text-zinc-600"></div>
+          </div>
+          <button class="rounded-xl border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-100" data-close="1">Close</button>
+        </div>
+
+        <div class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <div id="mGallery" class="grid grid-cols-3 gap-2"></div>
+            <div id="mHero" class="mt-2 rounded-2xl border border-zinc-200 bg-zinc-100 aspect-[4/3] flex items-center justify-center text-sm text-zinc-500">
+              No photo yet (add images to /photos and update shoes.json)
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div class="p-3 rounded-2xl border border-zinc-200 bg-white">
+                <div class="text-xs text-zinc-500">Status</div>
+                <div id="mStatus" class="font-medium"></div>
+              </div>
+              <div class="p-3 rounded-2xl border border-zinc-200 bg-white">
+                <div class="text-xs text-zinc-500">Use case</div>
+                <div id="mUse" class="font-medium"></div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-2xl border border-zinc-200 bg-white text-sm">
+              <div class="text-xs text-zinc-500 mb-1">Specs</div>
+              <dl id="mSpecs" class="space-y-1"></dl>
+            </div>
+
+            <div class="p-3 rounded-2xl border border-zinc-200 bg-white text-sm">
+              <div class="text-xs text-zinc-500 mb-1">Notes</div>
+              <div id="mNotes" class="text-zinc-800 whitespace-pre-wrap"></div>
+            </div>
+
+            <div class="p-3 rounded-2xl border border-zinc-200 bg-white text-sm">
+              <div class="text-xs text-zinc-500 mb-1">History</div>
+              <div id="mHistory" class="text-zinc-800"></div>
+              <div class="text-xs text-zinc-500 mt-2">Tip: keep a timeline of “bought / resoled / polished / sold” here.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
