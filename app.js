@@ -11,7 +11,8 @@ const state = {
   q: "",
   collection: "all",
   brand: "all",
-  type: "all"
+  type: "all",
+  tag: "all"
 };
 
 const el = (id) => document.getElementById(id);
@@ -58,6 +59,7 @@ function applyFilters() {
   if (state.collection !== "all") items = items.filter(x => x.collection === state.collection);
   if (state.brand !== "all") items = items.filter(x => (x.brand || "").toLowerCase() === state.brand.toLowerCase());
   if (state.type !== "all") items = items.filter(x => (x.type || "").toLowerCase() === state.type.toLowerCase());
+  if (state.tag !== "all") items = items.filter(x => (x.tags || []).map(t => String(t).toLowerCase()).includes(state.tag.toLowerCase()));
 
   if (state.q.trim()) {
     const results = state.fuse.search(state.q.trim());
@@ -74,12 +76,15 @@ function applyFilters() {
 function populateFacets() {
   const brands = uniqSorted(state.items.map(x => x.brand));
   const types = uniqSorted(state.items.map(x => x.type));
+  const tags  = uniqSorted(state.items.flatMap(x => (x.tags || [])));
 
   const brandSel = el("brand");
   const typeSel  = el("type");
+  const tagSel   = el("tag");
 
   for (const b of brands) brandSel.insertAdjacentHTML("beforeend", `<option value="${b}">${b}</option>`);
-  for (const t of types) typeSel.insertAdjacentHTML("beforeend", `<option value="${t}">${t}</option>`);
+  for (const t of types)  typeSel.insertAdjacentHTML("beforeend", `<option value="${t}">${t}</option>`);
+  for (const g of tags)   tagSel.insertAdjacentHTML("beforeend", `<option value="${g}">${g}</option>`);
 }
 
 function setHero(url) {
@@ -112,7 +117,14 @@ function openModal(item) {
     ["Purchase (RMB)", item.purchasePriceRMB],
     ["Orig. currency", item.origCurrency],
     ["Condition", item.condition],
-    ["Collection", item.collection]
+    ["Collection", item.collection],
+    ["Tags", (item.tags || []).join(", ")],
+    ["Season", ((item.rotation||{}).season||[]).join(", ")],
+    ["Weather", ((item.rotation||{}).weather||[]).join(", ")],
+    ["Role", (item.role||{}).collectionRole],
+    ["Style axis", ((item.role||{}).styleAxis||[]).join(", ")],
+    ["Overlaps", (item.comparison && item.comparison.overlapsWith ? item.comparison.overlapsWith.length : 0)],
+    ["Fills gap", (item.comparison||{}).fillsGap]
   ];
 
   el("mSpecs").innerHTML = specs.map(([k,v]) => `
@@ -162,7 +174,7 @@ async function init() {
     includeScore: true,
     threshold: 0.35,
     keys: [
-      "label","brand","type","model","color","material","line","last","size","country","sole","useCase","notes"
+      "label","brand","type","model","color","material","line","last","size","country","sole","useCase","notes","tags","role.collectionRole","role.styleAxis","rotation.season","rotation.weather","comparison.fillsGap"
     ]
   });
 
@@ -173,6 +185,7 @@ async function init() {
   el("collection").addEventListener("change", (e) => { state.collection = e.target.value; applyFilters(); });
   el("brand").addEventListener("change", (e) => { state.brand = e.target.value; applyFilters(); });
   el("type").addEventListener("change", (e) => { state.type = e.target.value; applyFilters(); });
+  el("tag").addEventListener("change", (e) => { state.tag = e.target.value; applyFilters(); });
 
   el("clear").addEventListener("click", () => {
     state.q = ""; state.collection="all"; state.brand="all"; state.type="all";
