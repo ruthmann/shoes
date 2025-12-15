@@ -168,7 +168,13 @@ function closeModal() {
 async function init() {
   const res = await fetch("./shoes.json");
   const data = await res.json();
-  state.items = data.items || [];
+  state.items = Array.isArray(data) ? data : (data.items || []);
+  // Backward-compat: allow shoes.json to be either an array or {items:[...]}
+  // Normalize collection field if missing (derive from status)
+  state.items = state.items.map(x => ({
+    ...x,
+    collection: x.collection || (String(x.status||"").toLowerCase().includes("retir") || String(x.status||"").toLowerCase().includes("sell") ? "retired" : "active"),
+  }));
 
   state.fuse = new Fuse(state.items, {
     includeScore: true,
