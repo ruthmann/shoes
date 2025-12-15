@@ -45,22 +45,42 @@
   </main>
 
   <!-- Detail modal -->
-  <div id="modal" class="hidden fixed inset-0 z-30">
+  <div id="modal" class="hidden fixed inset-0 z-30 overflow-y-auto">
+    <!-- overlay -->
     <div class="absolute inset-0 bg-black/40" data-close="1"></div>
-    <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center p-2 sm:p-6">
-      <div class="w-full sm:max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div class="p-4 border-b border-zinc-200 flex items-start justify-between gap-3">
+
+    <!-- positioning wrapper -->
+    <div class="relative min-h-full w-full flex items-start sm:items-center justify-center p-2 sm:p-6">
+
+      <!-- modal card -->
+      <div class="w-full sm:max-w-3xl bg-white rounded-2xl shadow-xl max-h-[92vh] flex flex-col">
+
+        <!-- header (sticky) -->
+        <div class="p-4 border-b border-zinc-200 flex items-start justify-between gap-3 sticky top-0 bg-white z-10">
           <div>
             <div id="mTitle" class="text-lg font-semibold"></div>
             <div id="mSub" class="text-sm text-zinc-600"></div>
           </div>
-          <button class="rounded-xl border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-100" data-close="1">Close</button>
+          <div class="flex items-center gap-2">
+            <button
+                    class="rounded-full border border-zinc-300 w-10 h-10 flex items-center justify-center text-lg leading-none hover:bg-zinc-100"
+                    aria-label="Close"
+                    title="Close"
+                    data-close="1">×</button>
+            <button
+                    class="rounded-xl border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-100"
+                    data-close="1">Close</button>
+          </div>
         </div>
 
-        <div class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- scrollable body -->
+        <div class="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-y-auto">
+
           <div>
             <div id="mGallery" class="grid grid-cols-3 gap-2"></div>
-            <div id="mHero" class="mt-2 rounded-2xl border border-zinc-200 bg-zinc-100 aspect-[4/3] flex items-center justify-center text-sm text-zinc-500">
+            <div
+                    id="mHero"
+                    class="mt-2 rounded-2xl border border-zinc-200 bg-zinc-100 aspect-[4/3] flex items-center justify-center text-sm text-zinc-500">
               No photo yet (add images to /photos and update shoes.json)
             </div>
           </div>
@@ -90,13 +110,17 @@
             <div class="p-3 rounded-2xl border border-zinc-200 bg-white text-sm">
               <div class="text-xs text-zinc-500 mb-1">History</div>
               <div id="mHistory" class="text-zinc-800"></div>
-              <div class="text-xs text-zinc-500 mt-2">Tip: keep a timeline of “bought / resoled / polished / sold” here.</div>
+              <div class="text-xs text-zinc-500 mt-2">
+                Tip: keep a timeline of “bought / resoled / polished / sold” here.
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
+  </div>
+
   </div>
 
   <script src="./app.js"></script>
